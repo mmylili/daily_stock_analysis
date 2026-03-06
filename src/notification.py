@@ -16,6 +16,7 @@ A股自选股智能分析系统 - 通知层
 """
 import logging
 from datetime import datetime
+from zoneinfo import ZoneInfo  # 内置模块，需 Python 3.9+
 from typing import List, Dict, Any, Optional
 from enum import Enum
 
@@ -37,6 +38,8 @@ from src.notification_sender import (
 )
 
 logger = logging.getLogger(__name__)
+tz_shanghai = ZoneInfo("Asia/Shanghai")  # 时区标识：Asia/Shanghai（北京/上海）
+
 
 
 class NotificationChannel(Enum):
@@ -440,7 +443,7 @@ class NotificationService(
         report_lines = [
             f"# 📅 {report_date} 股票智能分析报告",
             "",
-            f"> 共分析 **{len(results)}** 只股票 | 报告生成时间：{datetime.now().strftime('%H:%M:%S')}",
+            f"> 共分析 **{len(results)}** 只股票 | 报告生成时间：{datetime.now(tz=tz_shanghai).strftime('%H:%M:%S')}",
             "",
             "---",
             "",
@@ -617,7 +620,7 @@ class NotificationService(
         # 底部信息（去除免责声明）
         report_lines.extend([
             "",
-            f"*报告生成时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*",
+            f"*报告生成时间：{datetime.now(tz=tz_shanghai).strftime('%Y-%m-%d %H:%M:%S')}*",
         ])
         
         return "\n".join(report_lines)
@@ -952,7 +955,7 @@ class NotificationService(
         # 底部（去除免责声明）
         report_lines.extend([
             "",
-            f"*报告生成时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*",
+            f"*报告生成时间：{datetime.now(tz=tz_shanghai).strftime('%Y-%m-%d %H:%M:%S')}*",
         ])
         
         return "\n".join(report_lines)
